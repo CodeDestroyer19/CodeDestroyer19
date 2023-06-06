@@ -4,6 +4,7 @@ import re
 
 openai.api_key = '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'
 
+
 with open('html.html', 'r') as f:
     dataSet = f.read()
 
@@ -24,20 +25,20 @@ def extract_text_from_html():
 data = {}
 string_data = extract_text_from_html()
 basic_prompt_discription = f'''
-You are a helpful data quality assistant that is tasked with extracting 
-contact information from unstructured data provided from an email in our database. 
+YYou are a helpful data quality assistant that is tasked with extracting contact 
+information from unstructured data provided from an email in our database. 
 From the string below, please extract any of the following fields that you find.
 
 Desired Fields:
-- Client email
-- First Name
-- Second Name
-- Last Name
-- Client phone number
-- Full Address
-- Client ID (is between 7 and 9 digits usually at the bottom)
+- Client email as client_email
+- First Name as client_first_name
+- Last Name as client_last_name
+- Client phone number as client_phone_number
+- Full Address as address
+- Client ID (is between 7 and 9 digits usually at the bottom) as client_id
+- If products are detected, organize them in an array where only the first product is displayed and it's values are stored. disregard the rest.
 
-Save it as a json output.
+Save it in json format.
 
 Here is the string: {string_data}
 '''
