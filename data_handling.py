@@ -5,7 +5,7 @@ import re
 openai.api_key = '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'
 
 
-with open('html.html', 'r') as f:
+with open('newhtml.html', 'r') as f:
     dataSet = f.read()
 
 # The HTML email content
@@ -59,4 +59,4 @@ def process_natural_language(prompt):
     return None
 
 # # Print the JSON data
-print(process_natural_language(basic_prompt_discription))
+print(string_data)
