@@ -16,7 +16,6 @@ soup = BeautifulSoup(html_content, 'html.parser')
 
 # Extract text from html file
 
-
 def extract_text_from_html():
     text = soup.get_text()
     # Remove extra whitespaces and newlines
