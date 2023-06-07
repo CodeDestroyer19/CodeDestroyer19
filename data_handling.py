@@ -1,6 +1,7 @@
 import re
 import openai
 from bs4 import BeautifulSoup
+import json
 
 openai.api_key = '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'
 
@@ -27,20 +28,20 @@ def extract_text_from_html():
 data = {}
 string_data = extract_text_from_html()
 basic_prompt_discription = f'''
-YYou are a helpful data quality assistant that is tasked with extracting contact 
-information from unstructured data provided from an email in our database. 
-From the string below, please extract any of the following fields that you find.
+You are a data quality assistant tasked with extracting 
+contact information and product details from an email in your database. 
+Your goal is to extract the following fields:
 
-Desired Fields:
-- Client email as client_email
-- First Name as client_first_name
-- Last Name as client_last_name
-- Client phone number as client_phone_number
-- Full Address as address
-- Client ID (is between 7 and 9 digits usually at the bottom) as client_id
-- If products are detected, organize them in an array where only the first product is displayed and it's values are stored. disregard the rest.
+-Client email as client_email
+-First Name as client_first_name
+-Last Name as client_last_name
+-Client phone number as client_phone_number
+-Full Address as address
+-Client ID (a 7 to 9-digit number usually found at the bottom) as client_id
+-If products are detected, organize them in an array where only the first product is displayed, and its values are stored. Disregard the rest, but refer to the "Code" field as product_id.
 
-Save it in json format.
+Using the provided unstructured data from an email in your database, extract the required fields and present the result in JSON format.
+Ensure that you correctly identify the client details and avoid confusing them with the emailer's details.
 
 Here is the string: {string_data}
 '''
@@ -61,6 +62,50 @@ def process_natural_language(prompt):
 
     return None
 
+#Response JSON DATA from natural language processer
+response_data = {
+  "client_email": "c.goulon@ginge-kerr.lu",
+  "client_first_name": "Christophe",
+  "client_last_name": "GOULON",
+  "client_phone_number": "",
+  "address": "46 ZAE Le Triangle Vert, 5691 ELLANGE, Luxembourg",
+  "client_id": "",
+  "products": [
+    {
+      "product_id": "20000000100011160",
+      "quantity": "1",
+      "name": "Zoll AED Plus défibrillateur semi-automatique",
+      "description": ""
+    }
+  ]
+}
+
+#Check if important values are present
+def check_client_id(data):
+    if 'client_id' in data and data['client_id']:
+        return True
+    else:
+        return False
+
+has_client_id = check_client_id(response_data)
+print(has_client_id)  # Output: True
+
+#Remove any empty fields not found in the email
+def remove_empty_fields(data):
+
+    def remove_empty(obj):
+        if isinstance(obj, dict):
+            return {key: remove_empty(value) for key, value in obj.items() if value != ''}
+        elif isinstance(obj, list):
+            return [remove_empty(item) for item in obj if item != '']
+        else:
+            return obj
+
+    cleaned_data = remove_empty(data)
+
+    return cleaned_data
+
+cleaned_json_data = remove_empty_fields(response_data)
 
 # # Print the JSON data
-print(string_data)
+print(cleaned_json_data)
