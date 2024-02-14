@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @CodeDestroyer19
 - 👀 I’m interested in both computer software and hardware.
-- 🌱 I’m currently learning ML and A.I using Python for my next project
+- 🌱 I’m currently learning ML and A.I using Python for my current project
 - 📫 How to reach me Twitter @Mike_kiwalabye
 
 <!---
